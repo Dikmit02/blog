@@ -1,20 +1,22 @@
+import _ from 'lodash'
 import jsonPlaceholder from "../apis/jsonPlaceholder";
 
-// export const fetchPosts = async () => {
-//   //BAD APPROACH
-//   //×
-// // Error: Actions must be plain objects. Use custom middleware for async actions.
-//   const response = await jsonPlaceholder.get("/posts");
-//   return {
-//     type: "FETCH_POSTS",
-//     payload: response,
-//   };
-// };
+export const fetchPostsAndUsers=()=>async (dispatch,getState)=>{
 
-export const fetchPosts = () => {
+  await dispatch(fetchPosts())
+  const userIds=_.uniq(_.map(getState().posts,'userId'))
+  userIds.forEach(id=>dispatch(fetchUser(id)))
+}
+export const fetchPosts = () => { 
   return async (dispatch, getState) => {
     const response = await jsonPlaceholder.get("/posts");  
     console.log("RESPONSEE ", response);
     dispatch({ type: "FETCH_POSTS", payload: response.data });
   };
 };
+
+
+export const fetchUser=id=>async dispatch =>{
+  const response=await jsonPlaceholder.get(`/users/${id}`)
+  dispatch({type:'FETCH_USER',payload:response.data})
+}
