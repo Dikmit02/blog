@@ -1,9 +1,16 @@
 import _ from 'lodash'
 import jsonPlaceholder from "../apis/jsonPlaceholder";
 
+// calling an action creator(fetchPOsts) from an action creator(fetchPostsAndUsers)
+//getState on redux store and helps to get All data from redux store
 export const fetchPostsAndUsers=()=>async (dispatch,getState)=>{
-
+ //await makes sure that we are waiting for fetchPosts to complete its 
+ //API request(ie 
+    // const response = await jsonPlaceholder.get("/posts");  )
+  // )
+  //and then after fetchPosts API network request is completed line 10 gets executed
   await dispatch(fetchPosts())
+  //just unquie id from posts 
   const userIds=_.uniq(_.map(getState().posts,'userId'))
   userIds.forEach(id=>dispatch(fetchUser(id)))
 }
